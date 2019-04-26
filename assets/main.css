@@ -62,3 +62,7 @@ body {
     bottom: 0;
     font-size: 16px;
 }
+
+::-webkit-scrollbar{width:0.5em;overflow:hidden;background:rgb(5, 49, 84);}
+/*::-webkit-scrollbar-track{background:red;}*/
+::-webkit-scrollbar-thumb{background:rgb(0,0,0,0.3);}

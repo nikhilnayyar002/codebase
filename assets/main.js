@@ -79,7 +79,7 @@ iframeBtn.addEventListener('click', () => {
 
 var editor = ace.edit("code-editor");
 editor.setTheme("ace/theme/monokai");
-editor.session.setMode("ace/mode/css");
+editor.session.setMode("ace/mode/javascript");
 
 const codeDocument = document.querySelector('#code-document');
 const codeTheme = document.querySelector('#code-theme');
