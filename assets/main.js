@@ -1,6 +1,6 @@
 
 // Make connection
-var socket = io.connect('http://localhost:4000');
+var socket = io.connect('https://nikcodebase.herokuapp.com');
 suppresser = false;
 
 //quill
