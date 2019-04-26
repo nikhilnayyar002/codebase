@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Codebase</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <!--socket-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+
+    <!-- quill -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <!--ace-->
+    <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+    <style>
+    </style>
+</head>
+
+<body>
+    <div id='main' class="row vh-100 no-gutters">
+
+        <div class="col-8 border-right border-info row no-gutters">
+            <div class="col-12 p-2" style="height:10vh">
+                <h1 class="display-4" style="font-size: 6vh">Code~Base</h1>
+            </div>
+            <div class="col-12 row no-gutters" style="height:90vh; overflow: hidden">
+
+                <ul class="col-12 nav nav-tabs border-bottom border-info" id="myTab" role="tablist" style="height:42px">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="mix-tab" data-toggle="tab" href="#mix" role="tab"
+                            aria-controls="mix" aria-selected="true">mix</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="code-tab" data-toggle="tab" href="#code" role="tab" aria-controls="code"
+                            aria-selected="false">code</a>
+                    </li>
+                </ul>
+                <div class="col-12 tab-content" id="myTabContent" style="height:calc(90vh - 42px)">
+                    <div class="tab-pane fade show active h-100" id="mix" role="tabpanel" aria-labelledby="mix-tab">
+
+                        <div id="toolbar-container">
+                            <div id="toolbar-container">
+                                <span class="ql-formats">
+                                    <select class="ql-font"></select>
+                                    <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-script" value="sub"></button>
+                                    <button class="ql-script" value="super"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-header" value="1"></button>
+                                    <button class="ql-header" value="2"></button>
+                                    <button class="ql-blockquote"></button>
+                                    <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-direction" value="rtl"></button>
+                                    <select class="ql-align"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                    <button class="ql-image"></button>
+                                    <button class="ql-video"></button>
+                                    <button class="ql-formula"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                        </div>
+                        <div id='editor'></div>
+
+                    </div>
+
+
+                    <div class="tab-pane fade position-relative h-100 d-flex flex-wrap align-content-start pt-1"
+                        id="code" role="tabpanel" aria-labelledby="code-tab">
+
+                        <div class="col-6">
+                            <label for="exampleFormControlSelect1">Theme:</label>
+                        </div>
+                        <div class="col-6">
+                            <label for="exampleFormControlSelect1">Document:</label>
+                        </div>
+                        <div class="col-6">
+                            <select id="code-theme" class="form-control" id="exampleFormControlSelect1">
+                                <option>monokai</option>
+                                <option>chrome</option>
+                                <option>katzenmilch</option>
+                                <option>ambiance</option>
+                                <option>dracula</option>
+                                <option>gruvbox</option>
+                                <option>idle_fingers</option>
+                                <option>merbivore_soft</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <select id="code-document" class="form-control" id="exampleFormControlSelect1">
+                                <option>javascript</option>
+                                <option>css</option>
+                                <option>html</option>
+                            </select>
+                        </div>
+                        <pre id='code-editor' class="col-12"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id='extras' class="col-4 row no-gutters">
+            <div class="col-12 border-bottom border-info p-2" style="height:40%">
+                <h5 id='feedback'>Share Screen
+                    <button id="btn-iframe" class="btn btn-info btn-sm">Large</button>
+                </h5>
+
+                <iframe id='screen-iframe' src="https://dynamo-2.firebaseapp.com/source/webrtc/test.html"
+                    frameborder="0"></iframe>
+            </div>
+            <div id="mario-chat" class="col-12 row no-gutters p-2" style="height:60%">
+                <div id='msgs' class="col-12 align-self-start">
+                    <h5 id='feedback'>Chat</h5>
+                    <div id="output" class="overflow-auto">
+
+                    </div>
+                </div>
+                <div id='chat-input' class="col-12 align-self-end">
+                    <input id="handle" class="form-control border-info text-info mb-2" type="text"
+                        placeholder="Handle" />
+                    <input id="message" class="form-control border-info text-info mb-2" type="text"
+                        placeholder="Message" />
+                    <button id="send" class="btn btn-info btn-block">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--quill-->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <!--main-->
+    <script src="main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+body {
+    color: white;
+}
+
+#main {
+    min-width: 800px;
+    min-height: 700px;
+    background: #373b3f;
+}
+
+#editor {
+    height: calc(100% - 70px);
+    border: none;
+    font-size: 16px;
+}
+
+#mario-chat{
+    max-width: 100%;
+}
+
+#mario-chat #chat-input input{
+    background: transparent;
+}
+
+#mario-chat #msgs {
+    height: calc(100% - 130px - 20px);
+}
+#mario-chat #msgs #output {
+    max-height: calc(100% - 24px);
+}
+#mario-chat #msgs #output p{
+    padding: 3px 0px;
+    margin: 0 20px;
+}
+.ql-toolbar *{
+    background: aliceblue;
+}
+#screen-iframe {
+    width: 100%;
+    height: calc(100% - 24px);
+    top: 50px;
+    left: 0;
+    padding-top: 10px;
+    z-index: 50;
+}
+.nav-tabs .nav-link.active {
+    background:  #17a2b8;
+    color: white;
+    border-color:transparent;
+}
+.nav-tabs a {
+    color: #17a2b8;
+}
+.nav-tabs a:hover {
+    border: none;
+}
+#code-editor {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 16px;
+}
