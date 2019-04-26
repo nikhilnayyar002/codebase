@@ -63,6 +63,6 @@ body {
     font-size: 16px;
 }
 
-::-webkit-scrollbar{width:0.5em;overflow:hidden;background:rgb(5, 49, 84);}
+::-webkit-scrollbar{width:0.5em;overflow:hidden;background:rgb(215, 220, 224);}
 /*::-webkit-scrollbar-track{background:red;}*/
-::-webkit-scrollbar-thumb{background:rgb(0,0,0,0.3);}
+::-webkit-scrollbar-thumb{background:rgba(0, 0, 0, 0.38);}
