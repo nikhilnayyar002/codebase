@@ -51,7 +51,7 @@ message.addEventListener('keypress', function () {
 
 socket.on('chat', function (data) {
     feedback.innerHTML = 'Chat';
-    output.innerHTML += '<strong class="text-info">' + data.handle + ': </strong>' + '<p class="text-muted">' + data.message + '</p>';
+    output.innerHTML += '<strong class="text-info">' + data.handle + ': </strong>' + '<p class="text-muted text-break">' + data.message + '</p>';
     output.scrollTop = output.scrollHeight;
 });
 
@@ -66,7 +66,7 @@ let iframe = document.getElementById('screen-iframe');
 let iframeBtn = document.getElementById('btn-iframe');
 iframeBtn.addEventListener('click', () => {
     if (iframe.style.position == 'static') {
-        iframe.style.background = 'black'
+        iframe.style.background = '#373b3fe8'
         iframe.style.position = 'fixed';
     }
     else {
@@ -86,18 +86,18 @@ const codeTheme = document.querySelector('#code-theme');
 const codeEditor = document.querySelector('#code-editor');
 
 codeDocument.addEventListener('change', (event) => {
-    editor.session.setMode("ace/mode/"+event.target.value);
+    editor.session.setMode("ace/mode/" + event.target.value);
 });
 
 codeTheme.addEventListener('change', (event) => {
-    editor.setTheme("ace/theme/"+event.target.value);
+    editor.setTheme("ace/theme/" + event.target.value);
 });
 
-socket.on('doc', (data)=> {
+socket.on('doc', (data) => {
     editor.setValue(data);
 });
 
-codeEditor.addEventListener("keyup", ()=>{
+codeEditor.addEventListener("keyup", () => {
     socket.emit('editDoc', editor.getValue());
 });
 

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <!-- " NOT WANT " to be search engine optimized-->
+
     <title>Codebase</title>
+    <link rel='icon' href='img/me.gif'>
+    <meta name="author" content="Nikhil Nayyar">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="main.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -153,14 +156,13 @@
                     </div>
                 </div>
                 <div id='chat-input' class="col-12 align-self-end">
-                    <input id="handle" class="form-control border-info text-info mb-2" type="text"
+                    <input id="handle" autocomplete="false" class="form-control text border-info text-info mb-2" type="text"
                         placeholder="Handle" />
-                    <input id="message" class="form-control border-info text-info mb-2" type="text"
+                    <input id="message" autocomplete="false" class="form-control border-info text-info mb-2" type="text"
                         placeholder="Message" />
                     <button id="send" class="btn btn-info btn-block">Send</button>
                 </div>
             </div>
-
         </div>
     </div>
 

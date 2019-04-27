@@ -38,4 +38,5 @@ Simple nodejs app that has an editor for presentation, 1 editor for coding, 1 sc
 <li>Chat msgs stored.</li>
 <li>Users restricted to app (may be).</li>
 <li>Different rooms. (may be)</li>
+<li>Rxjs Support</li>
 </ul>
