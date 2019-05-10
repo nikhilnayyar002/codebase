@@ -20,6 +20,15 @@ socket.on('html', function (data) {
     qlEditor.innerHTML = data;
 });
 
+var imageLink = document.querySelector('.ql-image');
+imageLink.addEventListener('click', ()=>{
+    var range = this.quill.getSelection();
+    var value = prompt('What is the image URL');
+    if(value){
+        this.quill.insertEmbed(range.index, 'image', value, Quill.sources.USER);
+    }
+});
+
 quill.on('text-change', function (delta, oldDelta, source) {
     if (suppresser) { suppresser = false; return; }
     if (source == 'user') {
