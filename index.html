@@ -137,35 +137,36 @@
 
                     </div>
 
-                    <div class="tab-pane fade  h-100 d-flex flex-wrap align-content-start pt-1"
+                    <div class="tab-pane fade  h-100 "
                         id="code" role="tabpanel" aria-labelledby="code-tab">
-
-                        <div class="col-6">
-                            <label for="code-theme">Theme:</label>
+                        <div class="row  h-100 no-gutters align-content-start pt-1">
+                            <div class="col-6">
+                                <label for="code-theme">Theme:</label>
+                            </div>
+                            <div class="col-6">
+                                <label for="code-document">Document:</label>
+                            </div>
+                            <div class="col-3">
+                                <select id="code-theme" class="form-control">
+                                    <option>monokai</option>
+                                    <option>chrome</option>
+                                    <option>katzenmilch</option>
+                                    <option>ambiance</option>
+                                    <option>dracula</option>
+                                    <option>gruvbox</option>
+                                    <option>idle_fingers</option>
+                                    <option>merbivore_soft</option>
+                                </select>
+                            </div>
+                            <div class="col-3 offset-md-3">
+                                <select id="code-document" class="form-control">
+                                    <option>javascript</option>
+                                    <option>css</option>
+                                    <option>html</option>
+                                </select>
+                            </div>
+                            <pre id='code-editor' class="col-12"></pre>
                         </div>
-                        <div class="col-6">
-                            <label for="code-document">Document:</label>
-                        </div>
-                        <div class="col-6">
-                            <select id="code-theme" class="form-control">
-                                <option>monokai</option>
-                                <option>chrome</option>
-                                <option>katzenmilch</option>
-                                <option>ambiance</option>
-                                <option>dracula</option>
-                                <option>gruvbox</option>
-                                <option>idle_fingers</option>
-                                <option>merbivore_soft</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <select id="code-document" class="form-control">
-                                <option>javascript</option>
-                                <option>css</option>
-                                <option>html</option>
-                            </select>
-                        </div>
-                        <pre id='code-editor' class="col-12"></pre>
                     </div>
                 </div>
             </div>
