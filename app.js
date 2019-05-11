@@ -7,6 +7,7 @@ var app = express();
 // Static files
 app.use(express.static(path.join(__dirname, 'assets')));
 
+/*
 // Enable reverse proxy support in Express. This causes the
 // the "X-Forwarded-Proto" header field to be trusted so its
 // value can be used to determine the protocol. See 
@@ -22,7 +23,7 @@ app.use (function (req, res, next) {
           res.redirect('https://' + req.headers.host + req.url);
   }
 });
-
+*/
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });

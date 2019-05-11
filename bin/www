@@ -95,6 +95,7 @@ function onListening() {
 //in memory data
 var globalHTML = null;
 var globalText = '';
+var globalSVG = null;
 
 // socket
 var io = socket(server);
@@ -111,11 +112,41 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('typing', data);
     });
 
-    //quill
-    socket.on('para', (data,html)=> {
-        globalHTML=html;
-        socket.broadcast.emit('updated_para', data.delta);
+    //draw
+    socket.on('dragged', (data) => {
+      socket.broadcast.emit('dragged', data);
     });
+    socket.on('dragstart', (data) => {
+      socket.broadcast.emit('dragstart', data);
+    });
+    socket.on('dragend', (data) => {
+      socket.broadcast.emit('dragend', data);
+    });
+    socket.on('undo', (data) => {
+      socket.broadcast.emit('undo');
+    });
+    socket.on('redo', (data) => {
+      socket.broadcast.emit('redo');
+    });
+    socket.on('clear', (data) => {
+      globalSVG=null;
+      socket.broadcast.emit('clear');
+    });
+    socket.on('svgdata', (data) => {
+      globalSVG=data;
+    });
+
+    if(globalSVG) 
+        socket.emit('svgdata',globalSVG);
+
+    //quill
+    socket.on('para', (data)=> {
+      socket.broadcast.emit('updated_para', data.delta);
+    });
+    socket.on('html', (html)=> {
+      globalHTML=html;
+    });
+
     if (globalHTML)
         socket.emit('html',globalHTML);
 

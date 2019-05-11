@@ -1,7 +1,125 @@
 
 // Make connection
-var socket = io.connect('https://nikcodebase.herokuapp.com');
+var socket = io.connect('http://localhost:3000');
 suppresser = false;
+
+//draw
+
+var activeLine;
+var drawSocketData;
+
+var undo = document.querySelector('#undo');
+var redo = document.querySelector('#redo');
+var clear = document.querySelector('#clear');
+var formControlRange=document.querySelector('#formControlRange');
+var colorInput = document.querySelector('#colorInput');
+var rangeLabel = document.querySelector('#rangeLabel');
+
+var svgSelector = document.querySelector('#svg-draw');
+var redoBuffer = [];
+
+formControlRange.addEventListener('change', ()=>{
+    rangeLabel.textContent="Line: "+formControlRange.value+"px";
+})
+
+var renderPath = d3.svg.line()
+    .x(function (d) { return d[0]; })
+    .y(function (d) { return d[1]; })
+    .tension(0)
+    .interpolate("cardinal");
+
+var svg = d3.select("svg")
+    .call(d3.behavior.drag()
+        .on("dragstart", dragstarted)
+        .on("drag", dragged)
+        .on("dragend", dragended));
+
+function dragstarted() {
+    if (drawSocketData) {
+        activeLine = svg.append("path").datum([])
+        .attr("class", "line")
+        .attr('stroke',drawSocketData.color)
+        .attr('stroke-width',drawSocketData.width); 
+    
+        activeLine.datum().push(drawSocketData.data);
+        drawSocketData = null;
+        return;
+    }
+    activeLine = svg.append("path").datum([])
+    .attr("class", "line")
+    .attr('stroke',colorInput.value)
+    .attr('stroke-width',formControlRange.value); 
+    
+    let t = d3.mouse(this);
+    activeLine.datum().push(t);
+    socket.emit('dragstart', {data:t,color:colorInput.value,width:formControlRange.value});
+}
+
+function dragged() {
+    if (drawSocketData) {
+        activeLine.datum().push(drawSocketData);
+        activeLine.attr("d", renderPath);
+        drawSocketData = null;
+        return;
+    }
+    let t = d3.mouse(this);
+    activeLine.datum().push(t);
+    activeLine.attr("d", renderPath);
+    socket.emit('dragged', t);
+}
+
+function dragended() {
+    activeLine = null;
+    socket.emit('dragend');
+    socket.emit('svgdata', svgSelector.innerHTML);
+}
+
+socket.on('dragged', (data) => {
+    drawSocketData = data;
+    dragged();
+});
+socket.on('dragstart', (data) => {
+    drawSocketData = data;
+    dragstarted();
+});
+socket.on('dragend', () => {
+    activeLine = null;
+});
+socket.on('svgdata', (data) => {
+    svgSelector.innerHTML=data;
+});
+
+function undoListner(t) {
+    if(t) socket.emit('undo');
+    let lastChild = svgSelector.lastChild;
+    if (lastChild) {
+        redoBuffer.unshift(lastChild);
+        svgSelector.removeChild(lastChild);
+    }
+};   
+function redoListner(t){
+    if(t) socket.emit('redo');
+    if (redoBuffer.length) {
+        let t = svgSelector.firstChild;
+        let popped = redoBuffer.pop();
+        if (t)
+            svgSelector.insertBefore(popped, t);
+        else
+            svgSelector.appendChild(popped);
+    }
+};  
+function clearListner(t){
+    if(t) socket.emit('clear');
+    svgSelector.innerHTML='';
+}; 
+
+socket.on('redo', redoListner);
+socket.on('undo', undoListner);
+socket.on('clear', clearListner);
+undo.addEventListener('click', undoListner);
+redo.addEventListener('click', redoListner);
+clear.addEventListener('click', clearListner);
+
 
 //quill
 var quill = new Quill('#editor', {
@@ -21,10 +139,10 @@ socket.on('html', function (data) {
 });
 
 var imageLink = document.querySelector('.ql-image');
-imageLink.addEventListener('click', ()=>{
+imageLink.addEventListener('click', () => {
     var range = this.quill.getSelection();
     var value = prompt('What is the image URL');
-    if(value){
+    if (value) {
         this.quill.insertEmbed(range.index, 'image', value, Quill.sources.USER);
     }
 });
@@ -33,10 +151,14 @@ quill.on('text-change', function (delta, oldDelta, source) {
     if (suppresser) { suppresser = false; return; }
     if (source == 'user') {
         var para = quill.getContents();
-        let str = quill.container.innerHTML;
-        let html = str.slice(str.indexOf('>') + 1, str.indexOf('</div><div class="ql-clipboard"'))
-        socket.emit('para', { delta: JSON.stringify(delta) }, html);
+        socket.emit('para', { delta: JSON.stringify(delta) });
+        Promise.resolve().then(() => {
+            let str = quill.container.innerHTML;
+            let html = str.slice(str.indexOf('>') + 1, str.indexOf('</div><div class="ql-clipboard"'))
+            socket.emit('html', html);
+        });
     }
+
 });
 
 // chat
@@ -109,6 +231,3 @@ socket.on('doc', (data) => {
 codeEditor.addEventListener("keyup", () => {
     socket.emit('editDoc', editor.getValue());
 });
-
-
-

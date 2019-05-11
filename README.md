@@ -3,6 +3,8 @@
 <p>
 Simple nodejs app that has an editor for presentation, 1 editor for coding, 1 screen sharing content and one chat container.
 </p>
+
+<a href="https://drive.google.com/open?id=1InR2-geIoJQ0HW_0hHGW6-jmBLaUvhDs">Images Link</a> 
 <h2>Current Release</h2>
 
 <h3>Ingredients</h3>
@@ -12,7 +14,8 @@ Simple nodejs app that has an editor for presentation, 1 editor for coding, 1 sc
 <li>socket</li>
 <li>quill editor</li>
 <li>ace editor</li>
-<li>Web rtc screen sharing experiment (Credit: Mauz Khan)</li>
+<li>free hand drawing</li>
+<li>Web rtc screen sharing experiment ( <a href="https://github.com/muaz-khan/WebRTC-Experiment/tree/master/Pluginfree-Screen-Sharing">Source</a> )</li>
 </ul>
 
 <h3>Disadvantages</h3>
@@ -20,6 +23,11 @@ Simple nodejs app that has an editor for presentation, 1 editor for coding, 1 sc
 <li>In-memory storage.</li>
 <li>Chat msgs not stored. Prev. msgs not broadcasted to new users.</li>
 <li>Any user can join the app. No  different rooms.</li>
+</ul>
+
+<h3>Problems Faced</h3>
+<ul>
+<li>Audio Streaming Failed (wasted 2 Hours)</li>
 </ul>
 
 
@@ -40,3 +48,6 @@ Simple nodejs app that has an editor for presentation, 1 editor for coding, 1 sc
 <li>Different rooms. (may be)</li>
 <li>Rxjs Support</li>
 </ul>
+
+
+

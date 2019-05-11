@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
@@ -27,7 +28,15 @@
     <!--ace-->
     <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 
+    <!--d3-->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
     <style>
+        .line {
+            fill: none;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+        }
     </style>
 </head>
 
@@ -46,9 +55,14 @@
                             aria-controls="mix" aria-selected="true">mix</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" id="draw-tab" data-toggle="tab" href="#draw" role="tab" aria-controls="draw"
+                            aria-selected="false">Draw</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" id="code-tab" data-toggle="tab" href="#code" role="tab" aria-controls="code"
                             aria-selected="false">code</a>
-                    </li>
+                    </li>                    
+
                 </ul>
                 <div class="col-12 tab-content" id="myTabContent" style="height:calc(90vh - 42px)">
                     <div class="tab-pane fade show active h-100" id="mix" role="tabpanel" aria-labelledby="mix-tab">
@@ -105,17 +119,35 @@
                     </div>
 
 
-                    <div class="tab-pane fade position-relative h-100 d-flex flex-wrap align-content-start pt-1"
+                    <div class="tab-pane fade h-100 d-row align-content-start no-gutters p-2 " id="draw"
+                        role="tabpanel" aria-labelledby="draw-tab">
+
+                        <div class="col-12 mb-2 d-flex align-items-center">
+                            <button id="undo" class="btn btn-info btn-sm mr-2">Undo</button>
+                            <button id="redo" class="btn btn-info btn-sm mr-2">Redo</button>
+                            <button id="clear" class="btn btn-info btn-sm mr-2">Clear</button>
+                            <input class="mr-2 bg-info border-0" id='colorInput' type="color">
+                            <input type="range" class="form-control-range d-inline w-auto mr-2" id="formControlRange" value="3"  min="1" max="10">
+                            <label id='rangeLabel' for="formControlRange">Line: 3px</label>
+                        </div>
+
+                        <svg id='svg-draw' class="col-12 w-100 border border-info"
+                            style="height:calc(100% - 31px - 8px)">
+                        </svg>
+
+                    </div>
+
+                    <div class="tab-pane fade  h-100 d-flex flex-wrap align-content-start pt-1"
                         id="code" role="tabpanel" aria-labelledby="code-tab">
 
                         <div class="col-6">
-                            <label for="exampleFormControlSelect1">Theme:</label>
+                            <label for="code-theme">Theme:</label>
                         </div>
                         <div class="col-6">
-                            <label for="exampleFormControlSelect1">Document:</label>
+                            <label for="code-document">Document:</label>
                         </div>
                         <div class="col-6">
-                            <select id="code-theme" class="form-control" id="exampleFormControlSelect1">
+                            <select id="code-theme" class="form-control">
                                 <option>monokai</option>
                                 <option>chrome</option>
                                 <option>katzenmilch</option>
@@ -127,7 +159,7 @@
                             </select>
                         </div>
                         <div class="col-6">
-                            <select id="code-document" class="form-control" id="exampleFormControlSelect1">
+                            <select id="code-document" class="form-control">
                                 <option>javascript</option>
                                 <option>css</option>
                                 <option>html</option>
@@ -156,8 +188,8 @@
                     </div>
                 </div>
                 <div id='chat-input' class="col-12 align-self-end">
-                    <input id="handle" autocomplete="false" class="form-control text border-info text-info mb-2" type="text"
-                        placeholder="Handle" />
+                    <input id="handle" autocomplete="false" class="form-control text border-info text-info mb-2"
+                        type="text" placeholder="Handle" />
                     <input id="message" autocomplete="false" class="form-control border-info text-info mb-2" type="text"
                         placeholder="Message" />
                     <button id="send" class="btn btn-info btn-block">Send</button>
@@ -166,10 +198,13 @@
         </div>
     </div>
 
+
     <!--quill-->
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
     <!--main-->
     <script src="main.js"></script>
+
 
 </body>
 
