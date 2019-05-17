@@ -1,22 +1,24 @@
 
 // Make connection
+
 var socket = io.connect('https://nikcodebase.herokuapp.com');
-suppresser = false;
+
+document.addEventListener("keydown",deleteListner);
 
 //draw
 
 var activeLine;
 var drawSocketData;
+var dashedValue='';
+var lastSelectedPath=null;
 
 var undo = document.querySelector('#undo');
-var redo = document.querySelector('#redo');
+var dashed = document.querySelector('#dashed');
 var clear = document.querySelector('#clear');
 var formControlRange=document.querySelector('#formControlRange');
 var colorInput = document.querySelector('#colorInput');
 var rangeLabel = document.querySelector('#rangeLabel');
-
 var svgSelector = document.querySelector('#svg-draw');
-var redoBuffer = [];
 
 formControlRange.addEventListener('change', ()=>{
     rangeLabel.textContent="Line: "+formControlRange.value+"px";
@@ -34,26 +36,29 @@ var svg = d3.select("svg")
         .on("drag", dragged)
         .on("dragend", dragended));
 
+var id=0;
 function dragstarted() {
-    if (drawSocketData) {
-        activeLine = svg.append("path").datum([])
+    function rtnActiveLine(color,width,id,data,dash) {
+        let temp = svg.append("path").datum([])
         .attr("class", "line")
-        .attr('stroke',drawSocketData.color)
-        .attr('stroke-width',drawSocketData.width); 
+        .attr('stroke',color)
+        .attr('stroke-width',width)
+        .attr('id',"path-"+ id)
+        .attr('stroke-dasharray',dash);
     
-        activeLine.datum().push(drawSocketData.data);
+        temp.datum().push(data);
+        return temp;
+    }
+    if (drawSocketData) {
+        activeLine=rtnActiveLine(drawSocketData.color,drawSocketData.width,id++,drawSocketData.data,drawSocketData.dash);
         drawSocketData = null;
         return;
     }
-    activeLine = svg.append("path").datum([])
-    .attr("class", "line")
-    .attr('stroke',colorInput.value)
-    .attr('stroke-width',formControlRange.value); 
-    
     let t = d3.mouse(this);
-    activeLine.datum().push(t);
-    socket.emit('dragstart', {data:t,color:colorInput.value,width:formControlRange.value});
+    activeLine=rtnActiveLine(colorInput.value,formControlRange.value,id++,t,dashedValue);
+    socket.emit('dragstart', {data:t,color:colorInput.value,width:formControlRange.value,dash:dashedValue});
 }
+
 
 function dragged() {
     if (drawSocketData) {
@@ -71,7 +76,7 @@ function dragged() {
 function dragended() {
     activeLine = null;
     socket.emit('dragend');
-    socket.emit('svgdata', svgSelector.innerHTML);
+    socket.emit('svgdata', svgSelector.innerHTML, id);
 }
 
 socket.on('dragged', (data) => {
@@ -85,18 +90,11 @@ socket.on('dragstart', (data) => {
 socket.on('dragend', () => {
     activeLine = null;
 });
-socket.on('svgdata', (data) => {
+socket.on('svgdata', (data,idValue) => {
     svgSelector.innerHTML=data;
+    id=idValue;
 });
-
-function undoListner(t) {
-    if(t) socket.emit('undo');
-    let lastChild = svgSelector.lastChild;
-    if (lastChild) {
-        redoBuffer.unshift(lastChild);
-        svgSelector.removeChild(lastChild);
-    }
-};   
+/*  
 function redoListner(t){
     if(t) socket.emit('redo');
     if (redoBuffer.length) {
@@ -107,21 +105,67 @@ function redoListner(t){
         else
             svgSelector.appendChild(popped);
     }
-};  
+};
+*/  
+function undoListner(t) {
+    if(t) socket.emit('undo');
+    let lastChild = svgSelector.lastChild;
+    if (lastChild) {
+        svgSelector.removeChild(lastChild);
+    }
+}; 
 function clearListner(t){
     if(t) socket.emit('clear');
     svgSelector.innerHTML='';
-}; 
-
-socket.on('redo', redoListner);
-socket.on('undo', undoListner);
+};
+function dashedListner(t){
+    if(dashedValue) {
+        dashedValue='';
+        t.target.classList.remove('active');
+    } else {
+        dashedValue='10';
+        t.target.classList.add('active');
+    }
+};
+function deleteListner(event){
+    if(event.code=='Delete' && lastSelectedPath) {
+        socket.emit('delete-path',lastSelectedPath.id);
+        lastSelectedPath.parentElement.removeChild(lastSelectedPath);
+        lastSelectedPath=null;
+    }
+    else if(!event.target){
+        let temp=svgSelector.querySelector('#'+event);
+        if(temp) 
+            temp.parentElement.removeChild(temp);
+        if(lastSelectedPath && lastSelectedPath.id==event)
+            lastSelectedPath=null;
+    }
+}
 socket.on('clear', clearListner);
+socket.on('undo', undoListner);
+socket.on('undo', undoListner);
+socket.on('delete-path', deleteListner);
+dashed.addEventListener('click', dashedListner);
 undo.addEventListener('click', undoListner);
-redo.addEventListener('click', redoListner);
 clear.addEventListener('click', clearListner);
+
+svgSelector.addEventListener("click",(event)=>{
+    let t=event.target;
+    if(lastSelectedPath){
+        lastSelectedPath.style.outline="none";
+        lastSelectedPath.style.opacity='1';
+        lastSelectedPath=null;
+    }
+    if(t.id.includes('path')) {
+        t.style.outline="3px dashed #17a2b8";
+        t.style.opacity='0.4';
+        lastSelectedPath=t;
+    }
+});
 
 
 //quill
+var suppresser = false;
 var quill = new Quill('#editor', {
     modules: { toolbar: '#toolbar-container' },
     theme: 'snow'
@@ -231,3 +275,13 @@ socket.on('doc', (data) => {
 codeEditor.addEventListener("keyup", () => {
     socket.emit('editDoc', editor.getValue());
 });
+
+/*
+#updates
+
+@selection d3
+https://bl.ocks.org/romsson/568e166d702b4a464347
+http://bl.ocks.org/paradite/71869a0f30592ade5246
+http://bl.ocks.org/lgersman/5311083
+
+*/

@@ -64,5 +64,4 @@ body {
 }
 
 ::-webkit-scrollbar{width:0.5em;overflow:hidden;background:rgb(215, 220, 224);}
-/*::-webkit-scrollbar-track{background:red;}*/
 ::-webkit-scrollbar-thumb{background:rgba(0, 0, 0, 0.38);}

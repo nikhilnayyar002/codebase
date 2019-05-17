@@ -96,6 +96,7 @@ function onListening() {
 var globalHTML = null;
 var globalText = '';
 var globalSVG = null;
+globalPathsID=0;
 
 // socket
 var io = socket(server);
@@ -125,19 +126,20 @@ io.on('connection', (socket) => {
     socket.on('undo', (data) => {
       socket.broadcast.emit('undo');
     });
-    socket.on('redo', (data) => {
-      socket.broadcast.emit('redo');
+    socket.on('delete-path', (data) => {
+      socket.broadcast.emit('delete-path',data);
     });
     socket.on('clear', (data) => {
       globalSVG=null;
       socket.broadcast.emit('clear');
     });
-    socket.on('svgdata', (data) => {
+    socket.on('svgdata', (data,id) => {
       globalSVG=data;
+      globalPathsID=id;
     });
 
     if(globalSVG) 
-        socket.emit('svgdata',globalSVG);
+        socket.emit('svgdata',globalSVG,globalPathsID);
 
     //quill
     socket.on('para', (data)=> {
